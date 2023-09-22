@@ -25,6 +25,10 @@ public class Main {
     public static final String CONTACT_UPDATED = "contactBook.Contact updated.";
     public static final String BOOK_EMPTY = "contactBook.Contact book empty.";
     public static final String PHONE_NOT_EXIST = "Phone number does not exist.";
+
+    public static final String SHARED_NUMBERS = "There are contacts that share phone numbers.";
+
+    public static final String DIFFERENT_NUMBERS = "All contacts have different phone numbers.";
     public static final String QUIT_MSG = "Goodbye!";
     public static final String COMMAND_ERROR = "Unknown command.";
 
@@ -57,7 +61,7 @@ public class Main {
                     listAllContacts(cBook);
                     break;
                 case EQUAL_PHONE:
-                    equalNumber(in, cBook);
+                    equalNumber(cBook);
                     break;
                 case GET_NUMBER:
                     getNumber(in, cBook);
@@ -91,8 +95,30 @@ public class Main {
         
     }
 
-    private static void equalNumber(Scanner in , ContactBook cBook){
-        //TODO
+    private static void equalNumber(ContactBook cBook){
+        Contact auxContact1 = new Contact("name", 0, "email");
+        Contact auxContact2 = new Contact("name", 0, "email");
+        ContactBook auxCB = new ContactBook();
+        int count = 0;
+        boolean same = false;
+        cBook.initializeIterator();
+        auxCB = cBook;
+        if(cBook.hasNext() && auxCB.hasNext()) {
+            auxContact1 = cBook.next();
+            auxContact2=auxCB.next();
+        }
+        while(cBook.hasNext() && auxCB.hasNext() && !same) {
+            auxContact1 = cBook.next();
+            count++;
+            if(auxContact1.getPhone() == auxContact2.getPhone()) {
+                same = true;
+                System.out.println(SHARED_NUMBERS);
+            } else if (count == cBook.getNumberOfContacts() && auxCB.hasNext()) {
+                for(int i = 0; i < count ; i++)
+                    auxContact1 = cBook.next();
+            }
+        }
+        if(!same) System.out.println(DIFFERENT_NUMBERS);
     }
 
     private static void addContact(Scanner in, ContactBook cBook) {
